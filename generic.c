@@ -84,6 +84,3 @@ double genericSum(void* a, enum Type a_t, void* b, enum Type b_t)
 	
 	return x + y;
 }
-
-// add string numbers
-// add toInt function
