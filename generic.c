@@ -1,86 +1,104 @@
 #include <stdio.h>
 #include <stdbool.h>
 
-#define typeof(x) _Generic(x, bool: BOOL, char: CHAR, int: INT, long: LONG, float: FLOAT, double: DOUBLE, void*: VOIDPTR, default: OTHER)
-#define sum(a, b) genericSum(&a, typeof(a), &b, typeof(b))
+#define TYPEOF(x) _Generic((x), \
+    bool: BOOL, \
+    char: CHAR, \
+    int: INT, \
+    long: LONG, \
+    float: FLOAT, \
+    double: DOUBLE, \
+    void*: VOIDPTR, \
+    default: OTHER)
+
+#define SUM(a, b) generic_sum(&(a), TYPEOF(a), &(b), TYPEOF(b))
 
 enum Type {
-	OTHER,
-	INT,
-	SHORT,
-	LONG,
-	CHAR,
-	BOOL,
-	FLOAT,
-	DOUBLE,
-	VOIDPTR
+    OTHER,
+    INT,
+    SHORT,
+    LONG,
+    CHAR,
+    BOOL,
+    FLOAT,
+    DOUBLE,
+    VOIDPTR
 };
 
-double genericSum(void* a, enum Type a_t, void* b, enum Type b_t);
+double generic_sum(void *a, enum Type a_t, void *b, enum Type b_t);
 
-void main()
+int main(void)
 {
-	int a = 5;
-	char b = '9';
-	bool c = true;
-	float d = 3.14;
-	double e = 3.14;
-	char* f = "145";
+    int a = 5;
+    char b = '9';
+    bool c = true;
+    float d = 3.14f;
+    double e = 3.14;
+    char *f = "145";
 
-	//printf("res = %lf\n", sum(a, b));
-	printf("res = %lf\n", sum(c, d));
-	printf("res = %lf\n", sum(b, e));
-	//printf("str = %s", f);
-	
-	return;
+    /* Example calls: */
+    /* printf("res = %lf\n", SUM(a, b)); */
+    printf("res = %lf\n", SUM(c, d));
+    printf("res = %lf\n", SUM(b, e));
+    /* printf("str = %s", f); */
+
+    return 0;
 }
 
-double genericSum(void* a, enum Type a_t, void* b, enum Type b_t)
+double generic_sum(void *a, enum Type a_t, void *b, enum Type b_t)
 {
-	double x = 0, y = 0;
-	
-	switch(a_t)
-	{
-		case BOOL:
-			x = *(bool*)a;
-			break;
-		case CHAR:
-			if (*(char*)a >= 48 && *(char*)a <= 57)
-				x = *(char*)a - 48;
-			break;
-		case INT:
-			x = *(int*)a;
-		case LONG:
-			x = *(long*)a;
-			break;
-		case FLOAT:
-			x = *(float*)a;
-			break;
-		case DOUBLE:
-			x = *(double*)a;
-			break;
-	}
-	
-	switch(b_t)
-	{
-		case BOOL:
-			y = *(bool*)b;
-		case CHAR:
-			if (*(char*)b >= 48 && *(char*)b <= 57)
-				y = *(char*)b - 48;
-			break;
-		case INT:
-			y = *(int*)b;
-		case LONG:
-			y = *(long*)b;
-			break;
-		case FLOAT:
-			y = *(float*)b;
-			break;
-		case DOUBLE:
-			y = *(double*)b;
-			break;
-	}
-	
-	return x + y;
+    double x = 0.0, y = 0.0;
+
+    switch (a_t) {
+    case BOOL:
+        x = *(bool *)a ? 1.0 : 0.0;
+        break;
+    case CHAR:
+        if ((*(char *)a >= '0') && (*(char *)a <= '9')) {
+            x = (double)(*(char *)a - '0');
+        }
+        break;
+    case INT:
+        x = (double)(*(int *)a);
+        break;
+    case LONG:
+        x = (double)(*(long *)a);
+        break;
+    case FLOAT:
+        x = (double)(*(float *)a);
+        break;
+    case DOUBLE:
+        x = *(double *)a;
+        break;
+    default:
+        break;
+    }
+
+    switch (b_t) {
+    case BOOL:
+        y = *(bool *)b ? 1.0 : 0.0;
+        break;
+    case CHAR:
+        if ((*(char *)b >= '0') && (*(char *)b <= '9')) {
+            y = (double)(*(char *)b - '0');
+        }
+        break;
+    case INT:
+        y = (double)(*(int *)b);
+        break;
+    case LONG:
+        y = (double)(*(long *)b);
+        break;
+    case FLOAT:
+        y = (double)(*(float *)b);
+        break;
+    case DOUBLE:
+        y = *(double *)b;
+        break;
+    default:
+        break;
+    }
+
+    return x + y;
 }
+
